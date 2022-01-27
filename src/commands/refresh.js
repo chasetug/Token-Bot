@@ -4,7 +4,7 @@ const config = require("../config")
 module.exports = {
     name: 'refresh',
     description: 'Refreshes the database.',
-    requiredRoles: '0', //Moderator Role
+    requiredRoles: config.modRole, //Moderator Role
     async execute(interaction) {
         let rawData = fs.readFileSync('src/users.json');
         let users = JSON.parse(rawData);

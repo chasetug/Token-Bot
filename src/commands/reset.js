@@ -1,18 +1,16 @@
-const fs = require('fs');
 const config = require("../config")
+const fs = require('fs');
 
 module.exports = {
     name: 'reset',
-    description: 'Resets the role database',
+    description: 'Resets the roles and database for all users.',
     requiredRoles: config.modRole,
     async execute(interaction) {
-        let rawData = fs.readFileSync('src/users.json');
-        let users = JSON.parse(rawData);
+        let users = JSON.parse(fs.readFileSync('src/users.json'));
         users.users = []
-        let newData = JSON.stringify(users);
-        fs.writeFileSync('src/users.json', newData);
-        interaction.guild.members.cache.forEach(member => member.roles.add(config.role))
+        fs.writeFileSync('src/users.json', JSON.stringify(users));
 
+        interaction.guild.members.cache.forEach(member => member.roles.add(config.role))
         interaction.reply({ content: `The roles and database have been reset.`, ephemeral: true });
     },
 };
