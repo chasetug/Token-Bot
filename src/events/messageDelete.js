@@ -7,20 +7,20 @@ module.exports = {
         if(message.author.bot) return;
         if(message.channel.id !== ticketChannel) return;
 
-        let rawData = fs.readFileSync('src/users.json');
-        let users = JSON.parse(rawData);
+        let rawData = fs.readFileSync('src/database.json');
+        let database = JSON.parse(rawData);
 
         if(!message.member.roles.cache.find(r => r.id === ticketRole)) {
             message.member.roles.add(ticketRole);
         }
 
-        if(!users.users.includes(message.author)) return;
+        if(!database.users.includes(message.author)) return;
 
-        users.users = users.users.filter((value, index, arr) => {
+        database.users = database.users.filter((value, index, arr) => {
             return value === message.author;
         });
 
-        let newData = JSON.stringify(users);
-        fs.writeFileSync('src/users.json', newData);
+        let newData = JSON.stringify(database);
+        fs.writeFileSync('src/database.json', newData);
     },
 };

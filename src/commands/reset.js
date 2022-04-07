@@ -6,13 +6,13 @@ module.exports = {
     description: 'Resets the role database & returns the role to everyone.',
     requiredRoles: modRole,
     async execute(interaction) {
-        let rawData = fs.readFileSync('src/users.json');
-        let users = JSON.parse(rawData);
+        let rawData = fs.readFileSync('src/database.json');
+        let database = JSON.parse(rawData);
 
-        users.users = []
+        database.users = []
 
-        let newData = JSON.stringify(users);
-        fs.writeFileSync('src/users.json', newData);
+        let newData = JSON.stringify(database);
+        fs.writeFileSync('src/database.json', newData);
 
         interaction.guild.members.cache.forEach(member => member.roles.add(ticketRole))
 

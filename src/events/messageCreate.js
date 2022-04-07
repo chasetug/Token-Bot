@@ -8,13 +8,13 @@ module.exports = {
         if(message.channel.id !== ticketChannel) return;
         if(!message.member.roles.cache.find(r => r.id === ticketRole)) return;
 
-        let rawData = fs.readFileSync('src/users.json');
-        let users = JSON.parse(rawData);
+        let rawData = fs.readFileSync('src/database.json');
+        let database = JSON.parse(rawData);
 
-        users.users.push(message.author.id.toString());
+        database.users.push(message.author.id.toString());
 
-        let newData = JSON.stringify(users);
-        fs.writeFileSync('src/users.json', newData);
+        let newData = JSON.stringify(database);
+        fs.writeFileSync('src/database.json', newData);
 
         message.member.roles.remove(ticketRole);
     },
