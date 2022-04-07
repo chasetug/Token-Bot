@@ -9,7 +9,7 @@ module.exports = {
         const guild = client.guilds.cache.get(config.guild);
         await guild.members.fetch();
         console.log('Fetched member cache!');
-        await guild.channels.cache.get(config.channel).messages.fetch();
+        await guild.channels.cache.get(config.ticketChannel).messages.fetch();
         console.log("Fetched messages!");
 
         // Register slash commands
@@ -20,7 +20,11 @@ module.exports = {
             },
             {
                 name: 'reset',
-                description: 'Resets the role database',
+                description: 'Gives everyone the role, resets the database.',
+            },
+            {
+                name: 'refresh',
+                description: 'Compares the database with the current messages, fixes roles.',
             },
             {
                 name: 'status',
