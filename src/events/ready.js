@@ -27,6 +27,10 @@ module.exports = {
                 description: 'Compares the database with the current messages, fixes roles.',
             },
             {
+                name: 'clear',
+                description: 'Clears the channel and resets roles.',
+            },
+            {
                 name: 'status',
                 description: 'Sets the bot user\'s status',
                 options: [
