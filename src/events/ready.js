@@ -1,16 +1,15 @@
 const config = require("../config")
+const {ticketChannel} = require("../config");
 
 module.exports = {
     name: 'ready',
     once: true,
-    async execute(client) {
+    async execute(client, client2, tokens) {
         console.log('Logged in and ready!');
 
         const guild = client.guilds.cache.get(config.guild);
         await guild.members.fetch();
         console.log('Fetched member cache!');
-        await guild.channels.cache.get(config.ticketChannel).messages.fetch();
-        console.log("Fetched messages!");
 
         // Register slash commands
         const data = [
@@ -76,8 +75,29 @@ module.exports = {
                     },
                 ],
             },
-
         ];
-        await client.guilds.cache.get(config.guild).commands.set(data).catch(console.error);
+
+        await guild.commands.set(data).catch(console.error);
+
+        let ticketChan = guild.channels.cache.get(ticketChannel);
+        let lastMessage = ticketChan.lastMessageId;
+        let size = 1;
+
+        while(size > 0) {
+            await ticketChan.messages.fetch({limit: 100, before: lastMessage})
+                .then(messages => {
+                    messages.forEach(message => {
+                        let author = message.author.id.toString();
+                        if (!tokens.has(author)) {
+                            tokens.set(author, message.id.toString());
+                        }
+                    })
+                    lastMessage = messages.lastKey();
+                    size = messages.size;
+                })
+        }
+
+        console.log("Fetched messages!")
+
     },
 }

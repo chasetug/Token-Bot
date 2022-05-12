@@ -3,12 +3,18 @@ const { ticketRole } = require("../config")
 
 module.exports = {
     name: 'guildMemberAdd',
-    execute(member, client) {
-        let rawData = fs.readFileSync('src/database.json');
-        let { users } = JSON.parse(rawData);
-
-        if(!users.includes(member.id)) {
-            member.roles.add(ticketRole);
+    async execute(member, client, tokens) {
+        if(member.partial) {
+            member.fetch()
+                .then(m => {
+                    if (!tokens.has(m.id)) {
+                        m.roles.add(ticketRole);
+                    }
+                })
+        } else {
+            if (!tokens.has(member.id)) {
+                member.roles.add(ticketRole);
+            }
         }
     },
 };

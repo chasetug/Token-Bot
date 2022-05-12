@@ -5,7 +5,7 @@ module.exports = {
     name: 'clear',
     description: 'Clears the channel.',
     requiredRoles: modRole,
-    async execute(interaction) {
+    async execute(interaction, tokens) {
 
         await interaction.guild.channels.cache.get(ticketChannel).messages.fetch()
             .then(messages => {
@@ -14,13 +14,7 @@ module.exports = {
                 })
             });
 
-        let rawData = fs.readFileSync('src/database.json');
-        let database = JSON.parse(rawData);
-
-        database.users = [];
-
-        let newData = JSON.stringify(database);
-        fs.writeFileSync('src/database.json', newData);
+        tokens.clear();
 
         interaction.guild.members.cache.forEach(member => member.roles.add(ticketRole));
 

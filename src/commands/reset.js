@@ -1,4 +1,3 @@
-const fs = require('fs');
 const { ticketRole, modRole } = require("../config")
 
 module.exports = {
@@ -6,16 +5,15 @@ module.exports = {
     description: 'Resets the role database & returns the role to everyone.',
     requiredRoles: modRole,
     async execute(interaction) {
-        let rawData = fs.readFileSync('src/database.json');
-        let database = JSON.parse(rawData);
+       tokens.clear();
 
-        database.users = []
+        await interaction.reply({content: "Currently resetting roles. Please wait...", ephemeral: true});
 
-        let newData = JSON.stringify(database);
-        fs.writeFileSync('src/database.json', newData);
+        interaction.guild.members.cache.filter(m => !m.roles.cache.has(ticketRole)).forEach(m => {
+            console.log(m.user.username)
+            m.roles.add(ticketRole)
+        });
 
-        interaction.guild.members.cache.forEach(member => member.roles.add(ticketRole))
-
-        interaction.reply({ content: `The roles and database have been reset.`, ephemeral: true });
+        await interaction.editReply({content: `The roles and database have been reset.`, ephemeral: true });
     },
 };

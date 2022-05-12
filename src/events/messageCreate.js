@@ -3,19 +3,21 @@ const { ticketChannel, ticketRole } = require("../config")
 
 module.exports = {
     name: 'messageCreate',
-    async execute(message, client) {
+    async execute(message, client, tokens) {
         if(message.author.bot) return;
         if(message.channel.id !== ticketChannel) return;
         if(!message.member.roles.cache.find(r => r.id === ticketRole)) return;
 
-        let rawData = fs.readFileSync('src/database.json');
-        let database = JSON.parse(rawData);
-
-        database.users.push(message.author.id.toString());
-
-        let newData = JSON.stringify(database);
-        fs.writeFileSync('src/database.json', newData);
-
-        message.member.roles.remove(ticketRole);
+        if(message.partial) {
+            message.fetch()
+                .then(m => {
+                    tokens.set(m.author.id.toString(), m.id.toString());
+                    m.member.roles.remove(ticketRole);
+                })
+        }
+        else {
+            tokens.set(message.author.id.toString(), message.id.toString());
+            message.member.roles.remove(ticketRole);
+        }
     },
 };
